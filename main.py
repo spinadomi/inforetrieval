@@ -2,7 +2,7 @@ from scholarly import scholarly
 import PySimpleGUI as sg
 from serpapi import GoogleSearch
 
-
+# This main file is for the Assignment 1 part of the homework.
 # api key = f9b37563533237dd08729f67c653bbed4b86fffe1136be36f7fcc474938e4014
 def main():
     create_graphic()
@@ -10,6 +10,7 @@ def main():
 
 
 def get_author_info(author_name, sort_method):
+    # get the author id from scholarly and then use it to get the author info from serpapi
     search_query = scholarly.search_author(author_name)
     author = scholarly.fill(next(search_query))
     author_id = author['scholar_id']
@@ -23,6 +24,7 @@ def get_author_info(author_name, sort_method):
     results = search.get_dict()
     articles = results["articles"]
     author_info = []
+    # get all required info about the author and store it in author_info
     for article in articles:
         title = article["title"]
         author = article["authors"]
