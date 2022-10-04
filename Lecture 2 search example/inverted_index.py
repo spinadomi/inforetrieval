@@ -45,7 +45,7 @@ class InvertedIndex:
     #               d - Term frequency of term a in document c.
     #               e - This is the TFIDF value if calculated
     #               f - This is the Log-Entropy value if calculated
-    # The terms list is kept sorted on the term value so we can use binary search.
+    # The terms list is kept sorted on the term value, so we can use binary search.
     #
     # The docs list is simply a list of the documentID's passed into
     # the InvertedIndex to be indexed.  This list is also kept sorted.
@@ -665,8 +665,14 @@ class InvertedIndex:
                     term_freq = item[1]
                     # find the total frequency count of f(i,j)
                     total_freq = 0
-                    for i in range(len(ll)):
-                        total_freq += ll.get(i)[1]
+                    # go through linked list and get total frequency count of f(i,j)
+                    iter2 = LinkedListIterator(ll)
+                    while True:
+                        try:
+                            item2 = next(iter2)
+                            total_freq += item2[1]
+                        except StopIteration:
+                            break
                     # find the proportion of term i in document j with respect to the total frequency count of f(i,j)
                     prop = term_freq / total_freq
                     # find the log entropy
