@@ -569,9 +569,30 @@ class InvertedIndex:
                     invDocFreq = math.log(total_docs / docFreq)
                     v[x] = value * invDocFreq
 
-        # TODO:  Need to fill this in
+        # take a 2nd pass to update vector as Log-Entropy if that was selected
         if log_entropy is True:
-            pass
+            # do the same thing as above but with log entropy
+            docs = self.get_total_docs()
+            for x in range(self.get_total_terms()):
+                value = v[x]
+                # get term frequency
+                term_freq = self.terms[x][2]
+
+                if value > 0.0:
+                    ll = self.terms[x][1]
+                    iter2 = LinkedListIterator(ll)
+                    total_freq = 0
+                    while True:
+                        try:
+                            item2 = next(iter2)
+                            total_freq += item2[1]
+                        except StopIteration:
+                            break
+                    # find the proportion of term i in document j with respect to the total frequency count of f(i,j)
+                    prop = term_freq / total_freq
+                    # find the log entropy
+                    log_entropy = math.log(1 + term_freq) * (1 + (prop * math.log(prop)) / math.log(docs))
+                    v[x] = value * log_entropy
 
         return v
 
@@ -649,7 +670,6 @@ class InvertedIndex:
         docs = self.get_total_docs()
         terms = self.get_total_terms()
 
-        # TODO
         # Log entropy A(i,j) = log(1 + f(i,j) * (1 + (Sum to j of (p(i,j)*log(p(i,j)))/ log(n))))
         # where f(i,j) is the frequency of term i in document j, p(i,j) is the proportion of term i in document j with
         # respect to the total frequency count of f(i,j) and n is the total number of documents in the corpus.
@@ -682,10 +702,6 @@ class InvertedIndex:
                 except StopIteration:
                     break
 
-
-
-
-
     ### Debugging random junk below
 
     # Fun function for displaying to the screen what the current
@@ -716,3 +732,5 @@ class InvertedIndex:
             llist = t[1]
             print("--> Document list for : " + t[0])
             llist.print_list()
+
+
