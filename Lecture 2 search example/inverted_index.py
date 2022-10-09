@@ -17,7 +17,7 @@
 # 23/04/2021 - Added vector space search functionality (CJL).
 # 06/09/2022 - Included space for Log-Entropy calculation (CJL).
 ###
-
+from scipy.stats import pearsonr, spearmanr
 from linked_list import LinkedList
 from linked_list import LinkedListIterator
 from nltk.corpus import stopwords
@@ -421,6 +421,66 @@ class InvertedIndex:
 
         return results
 
+    def search_pearson(self, q, tfidf=False, log_entropy=False):
+        # Sanity check flags
+        if tfidf and log_entropy:
+            raise Exception("[search]:  Error, both tfidf and log_entropy can't both be True.")
+
+        # First, process the query and turn it into an appropriate vector representation
+        qv = self.create_query_vector(q, tfidf, log_entropy)
+
+        # Iterate through our corpus doing comparisons
+        results = []
+        for i in range(self.get_total_docs()):
+            v = self.get_doc_vector(i)
+            pearson = self.pearson_comparison(qv, v)
+            results.append((self.docs[i], pearson))
+
+        # sort list of tuples on pearson value
+        results.sort(key=lambda x: x[1], reverse=True)
+
+        return results
+
+    def search_spearman(self, q, tfidf=False, log_entropy=False):
+        # Sanity check flags
+        if tfidf and log_entropy:
+            raise Exception("[search]:  Error, both tfidf and log_entropy can't both be True.")
+
+        # First, process the query and turn it into an appropriate vector representation
+        qv = self.create_query_vector(q, tfidf, log_entropy)
+
+        # Iterate through our corpus doing comparisons
+        results = []
+        for i in range(self.get_total_docs()):
+            v = self.get_doc_vector(i)
+            spear = self.spearman_comparison(qv, v)
+            results.append((self.docs[i], spear))
+
+        # sort list of tuples on spearman value
+        results.sort(key=lambda x: x[1], reverse=True)
+
+        return results
+
+    def search_euclidean(self, q, tfidf=False, log_entropy=False):
+        # Sanity check flags
+        if tfidf and log_entropy:
+            raise Exception("[search]:  Error, both tfidf and log_entropy can't both be True.")
+
+        # First, process the query and turn it into an appropriate vector representation
+        qv = self.create_query_vector(q, tfidf, log_entropy)
+
+        # Iterate through our corpus doing comparisons
+        results = []
+        for i in range(self.get_total_docs()):
+            v = self.get_doc_vector(i)
+            dist = self.euclidean_distance(qv, v)
+            results.append((self.docs[i], dist))
+
+        # sort list of tuples on euclidean distance value
+        results.sort(key=lambda x: x[1], reverse=True)
+
+        return results
+
     ##
     # Given the state of the inverted index generate a term by document
     # matrix from its contents.
@@ -595,6 +655,28 @@ class InvertedIndex:
                     v[x] = value * log_entropy
 
         return v
+
+    def euclidean_distance(self, v1, v2):
+        # return the euclidean distance of two vectors
+        return math.sqrt(sum([(v1[i] - v2[i]) ** 2 for i in range(len(v1))]))
+
+    def spearman_comparison(self, v1, v2):
+        # Sanity check
+        if len(v1) != len(v2):
+            raise Exception("[spearman_comparison]:  Error, vectors are not the same length.")
+        # check vectors are of same type
+        if type(v1) != type(v2):
+            raise Exception("[spearman_comparison]:  Error, vectors are not the same type.")
+        return spearmanr(v1, v2)[0]
+
+    def pearson_comparison(self, v1, v2):
+        # Sanity check
+        if len(v1) != len(v2):
+            raise Exception("[pearson_comparison]:  Error, vectors are not the same length.")
+        # check vectors are of same type
+        if type(v1) != type(v2):
+            raise Exception("[pearson_comparison]:  Error, vectors are not the same type.")
+        return pearsonr(v1, v2)[0]
 
     ##
     # Do a cosine comparison between two vectors.  We will assume both vectors are
