@@ -35,6 +35,9 @@ yahoo - Precision at 11 standard recall levels: ([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 
 yahoo - Precision at 11 standard recall levels: ([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], [0, 0, 1.0, 1.0, 1.0, 1.0, 0.75, 0.75, 0.6, 0.6, 0.6])
 
 google - P@5: 1.0, P@10: 1.0, F-measure: 1.0
+
 bing - P@5: 0.6, P@10: 0.4, F-measure: 0.48
+
 duckduckgo - P@5: 0.6, P@10: 0.4, F-measure: 0.48
+
 yahoo - P@5: 0.6, P@10: 0.6, F-measure: 0.6
