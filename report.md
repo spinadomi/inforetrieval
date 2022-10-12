@@ -54,3 +54,6 @@ bing - P@5: 0.6, P@10: 0.4, F-measure: 0.48
 duckduckgo - P@5: 0.6, P@10: 0.4, F-measure: 0.48
 
 yahoo - P@5: 0.6, P@10: 0.6, F-measure: 0.6
+
+This means that yahoo performed better than bing and duckduckgo for this query, 
+as the F-measure is higher for yahoo than for bing and duckduckgo.
