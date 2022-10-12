@@ -1,5 +1,6 @@
 geckodriver.log
 search_results.json
+search_results_all.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
